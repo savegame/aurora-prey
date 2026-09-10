@@ -11,3 +11,5 @@ RPMS
 *.sh
 documentation.list
 *.log
+# generated in-tree by the rpm %install step
+*.desktop
