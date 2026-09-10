@@ -52,13 +52,18 @@ at a legally installed copy of the game.
 %setup -q -n %{name}-%{version}
 
 %build
-# SDL2 first: the engine links against the fork, not against the system one
+# The SDL2 fork carries the Aurora OS fixes and is what the game runs against.
+# It is not what the engine is compiled against, though: the fork is binary
+# compatible with the SDL2 in the repository and declares the same headers, so
+# the engine links the system one at build time and finds the fork at runtime
+# through the rpath, where it sits inside the package under the same soname.
+# The direction is the safe one — the fork (2.30) is newer than the system
+# library (2.24), so every symbol the older headers declare is there.
 cmake \
     -G Ninja \
     -DCMAKE_MAKE_PROGRAM=/usr/bin/ninja \
     -Bbuild/%{_arch}/libsdl \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_LIBDIR=lib \
     -DSDL_PULSEAUDIO=ON \
     -DSDL_RPATH=OFF \
     -DSDL_AUDIO=ON \
@@ -69,12 +74,10 @@ cmake \
     libsdl
 
 cmake --build build/%{_arch}/libsdl -j`nproc`
-
-# Installed into a staging prefix rather than consumed from the build tree:
-# the engine picks SDL2 up with find_package and links the SDL2::SDL2 imported
-# target, and that target only exists in an installed package. A build tree
-# carries SDL2Config.cmake but no SDL2Targets.cmake to define it.
-cmake --install build/%{_arch}/libsdl --prefix $PWD/build/%{_arch}/sdl2
+pushd build/%{_arch}/libsdl
+rsync -avP include-config-release/SDL2/* include/SDL2/
+rsync -avP *.so* lib/
+popd
 
 # the engine: Quake 4 only, GLES3, with the port turned on
 cmake \
@@ -82,7 +85,6 @@ cmake \
     -DCMAKE_MAKE_PROGRAM=/usr/bin/ninja \
     -Bbuild/%{_arch}/quake4es \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_PREFIX_PATH=$PWD/build/%{_arch}/sdl2 \
     -DBUILD_D3=OFF \
     -DBUILD_PREY=OFF \
     -DBUILD_ETQW=OFF \
@@ -109,8 +111,9 @@ cmake --build build/%{_arch}/quake4es -j`nproc`
 install -m 755 -D build/%{_arch}/quake4es/doom3/neo/Quake4 %{buildroot}%{_bindir}/%{name}
 install -m 755 -D build/%{_arch}/quake4es/doom3/neo/libq4game.so -t %{buildroot}%{_datadir}/%{name}/lib
 
-# SDL2 from the fork travels inside the package
-install -D -s build/%{_arch}/sdl2/lib*/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%{name}/lib
+# SDL2 from the fork travels inside the package and wins at runtime over the
+# system one, because the binary's rpath points here
+install -D -s build/%{_arch}/libsdl/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%{name}/lib
 
 # then patch elf path for game binary
 patchelf --force-rpath --set-rpath %{_datadir}/%{name}/lib %{buildroot}%{_bindir}/%{name}
