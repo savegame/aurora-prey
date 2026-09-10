@@ -1,0 +1,7 @@
+[submodule "libsdl"]
+	path = libsdl
+	url = https://github.com/savegame/SDL.git
+[submodule "quake4es"]
+	path = quake4es
+	url = /home/sashikknox/Projects/aurora-ports/quake4es.git
+	branch = aurora

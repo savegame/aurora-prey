@@ -1,0 +1,13 @@
+gameport
+*.md
+!README.*
+port_config.json
+build
+RPMS
+*.log
+*.tga
+*.png
+!icons/*.png
+*.sh
+documentation.list
+*.log
