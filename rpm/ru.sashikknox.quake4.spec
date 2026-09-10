@@ -123,6 +123,10 @@ install -D -s build/%{_arch}/libsdl/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%
 # directory, it is read after this one and wins
 install -m 644 -D SDL_GameControllerDB/gamecontrollerdb.txt %{buildroot}%{_datadir}/%{name}/gamecontrollerdb.txt
 
+# default bindings for the game controller keys; the engine applies them at
+# startup to the keys the user's configs leave unbound
+install -m 644 -D gamepad.cfg %{buildroot}%{_datadir}/%{name}/gamepad.cfg
+
 # then patch elf path for game binary
 patchelf --force-rpath --set-rpath %{_datadir}/%{name}/lib %{buildroot}%{_bindir}/%{name}
 # install icons files
