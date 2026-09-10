@@ -42,7 +42,6 @@ BuildRequires: pkgconfig(libcurl)
 BuildRequires: pkgconfig(ogg)
 BuildRequires: pkgconfig(vorbis)
 BuildRequires: pkgconfig(vorbisfile)
-BuildRequires: pkgconfig(freetype2)
 
 %description
 Quake 4 port to Aurora OS, built on the idTech4A++ branch of idTech4.
@@ -59,6 +58,7 @@ cmake \
     -DCMAKE_MAKE_PROGRAM=/usr/bin/ninja \
     -Bbuild/%{_arch}/libsdl \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     -DSDL_PULSEAUDIO=ON \
     -DSDL_RPATH=OFF \
     -DSDL_AUDIO=ON \
@@ -69,10 +69,12 @@ cmake \
     libsdl
 
 cmake --build build/%{_arch}/libsdl -j`nproc`
-pushd build/%{_arch}/libsdl
-rsync -avP include-config-release/SDL2/* include/SDL2/
-rsync -avP *.so* lib/
-popd
+
+# Installed into a staging prefix rather than consumed from the build tree:
+# the engine picks SDL2 up with find_package and links the SDL2::SDL2 imported
+# target, and that target only exists in an installed package. A build tree
+# carries SDL2Config.cmake but no SDL2Targets.cmake to define it.
+cmake --install build/%{_arch}/libsdl --prefix $PWD/build/%{_arch}/sdl2
 
 # the engine: Quake 4 only, GLES3, with the port turned on
 cmake \
@@ -80,8 +82,7 @@ cmake \
     -DCMAKE_MAKE_PROGRAM=/usr/bin/ninja \
     -Bbuild/%{_arch}/quake4es \
     -DCMAKE_BUILD_TYPE=Release \
-    -DSDL2_DIR=%{_builddir}/%{name}-%{version}/build/%{_arch}/libsdl \
-    -DCMAKE_PREFIX_PATH=%{_builddir}/%{name}-%{version}/build/%{_arch}/libsdl \
+    -DCMAKE_PREFIX_PATH=$PWD/build/%{_arch}/sdl2 \
     -DBUILD_D3=OFF \
     -DBUILD_PREY=OFF \
     -DBUILD_ETQW=OFF \
@@ -96,7 +97,8 @@ cmake \
     -DAURORA_APP=%{_app_appname} \
     -DUSE_SYSTEM_OGGVORBIS=ON \
     -DUSE_SYSTEM_CURL=ON \
-    -DUSE_SYSTEM_FREETYPE=ON \
+    -DCURL_LIBRARY=%{_libdir}/libcurl.so \
+    -DUSE_SYSTEM_FREETYPE=OFF \
     -S quake4es \
     -B build/%{_arch}/quake4es
 
@@ -108,7 +110,7 @@ install -m 755 -D build/%{_arch}/quake4es/doom3/neo/Quake4 %{buildroot}%{_bindir
 install -m 755 -D build/%{_arch}/quake4es/doom3/neo/libq4game.so -t %{buildroot}%{_datadir}/%{name}/lib
 
 # SDL2 from the fork travels inside the package
-install -D -s build/%{_arch}/libsdl/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%{name}/lib
+install -D -s build/%{_arch}/sdl2/lib*/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%{name}/lib
 
 # then patch elf path for game binary
 patchelf --force-rpath --set-rpath %{_datadir}/%{name}/lib %{buildroot}%{_bindir}/%{name}
