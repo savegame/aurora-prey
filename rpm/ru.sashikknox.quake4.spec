@@ -115,6 +115,14 @@ install -m 755 -D build/%{_arch}/quake4es/doom3/neo/libq4game.so -t %{buildroot}
 # system one, because the binary's rpath points here
 install -D -s build/%{_arch}/libsdl/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%{name}/lib
 
+# SDL knows only a handful of game controllers by itself, the community mapping
+# database from the SDL_GameControllerDB submodule teaches it hundreds more. The
+# engine reads it from the package directory; it is installed here rather than
+# with the engine's GAMECONTROLLERDB_FILE, which only copies it into the build
+# tree. Users can add their own mappings in gamecontrollerdb.txt in the save
+# directory, it is read after this one and wins
+install -m 644 -D SDL_GameControllerDB/gamecontrollerdb.txt %{buildroot}%{_datadir}/%{name}/gamecontrollerdb.txt
+
 # then patch elf path for game binary
 patchelf --force-rpath --set-rpath %{_datadir}/%{name}/lib %{buildroot}%{_bindir}/%{name}
 # install icons files
