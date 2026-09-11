@@ -11,8 +11,9 @@ License:    GPLv3
 Source0:    %{name}.tar.gz
 
 # SDL2 is built from the fork inside this package and installed next to the
-# binary, so the system must not look for it as an external dependency
-%define __requires_exclude ^libSDL2.*\\.so.*$
+# binary, and OpenAL is copied into it from the target, so the system must not
+# look for them as external dependencies
+%define __requires_exclude ^libSDL2.*\\.so.*|libopenal\\.so.*$
 %define __provides_exclude_from ^%{_datadir}/%{name}/lib/.*\\.so.*$
 
 BuildRequires: rsync
@@ -114,6 +115,11 @@ install -m 755 -D build/%{_arch}/quake4es/doom3/neo/libq4game.so -t %{buildroot}
 # SDL2 from the fork travels inside the package and wins at runtime over the
 # system one, because the binary's rpath points here
 install -D -s build/%{_arch}/libsdl/libSDL2-2.0.so* -t %{buildroot}%{_datadir}/%{name}/lib
+
+# the engine plays sound through OpenAL, the only output the Aurora OS audio
+# stack accepts from it. It loads the library at runtime by its soname, which
+# the rpath resolves here, so OpenAL from the target travels inside the package
+install -D %{_libdir}/libopenal.so.1* -t %{buildroot}%{_datadir}/%{name}/lib
 
 # SDL knows only a handful of game controllers by itself, the community mapping
 # database from the SDL_GameControllerDB submodule teaches it hundreds more. The
