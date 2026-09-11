@@ -43,6 +43,9 @@ BuildRequires: pkgconfig(libcurl)
 BuildRequires: pkgconfig(ogg)
 BuildRequires: pkgconfig(vorbis)
 BuildRequires: pkgconfig(vorbisfile)
+# MCE is asked over the system bus to keep the display on during the game
+BuildRequires: pkgconfig(glib-2.0)
+BuildRequires: pkgconfig(gio-2.0)
 
 %description
 Quake 4 port to Aurora OS, built on the idTech4A++ branch of idTech4.
