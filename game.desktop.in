@@ -13,4 +13,4 @@ OrganizationName=__ORGNAME__
 ApplicationName=__APPNAME__
 
 [X-Aurora-Application]
-Orientation=LandscapeInverted;Landscape
+Orientation=Portrait
