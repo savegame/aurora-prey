@@ -1,5 +1,7 @@
 # Quake 4 для ОС Аврора
 
+[English](README.md) | Русский
+
 Порт Quake 4 на ОС Аврора.
 
 Quake 4 - шутер от первого лица, разработанный студией Raven Software
