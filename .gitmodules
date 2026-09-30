@@ -1,10 +1,10 @@
 [submodule "libsdl"]
 	path = libsdl
 	url = https://github.com/savegame/SDL.git
-[submodule "quake4es"]
-	path = quake4es
+[submodule "prey"]
+	path = prey
 	url = https://github.com/savegame/quake4es.git
-	branch = aurora
+	branch = prey
 [submodule "SDL_GameControllerDB"]
 	path = SDL_GameControllerDB
 	url = https://github.com/mdqinc/SDL_GameControllerDB

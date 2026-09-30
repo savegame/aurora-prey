@@ -1,9 +1,9 @@
 %define _app_orgname ru.sashikknox
-%define _app_appname quake4
-%define _app_launcher_name Quake 4
+%define _app_appname prey
+%define _app_launcher_name Prey
 
 Name:       %{_app_orgname}.%{_app_appname}
-Summary:    Quake 4 for Aurora OS
+Summary:    Prey for Aurora OS
 Release:    1
 Version:    1.0.0
 Group:      Amusements/Games
@@ -48,7 +48,7 @@ BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(gio-2.0)
 
 %description
-Quake 4 port to Aurora OS, built on the idTech4A++ branch of idTech4.
+Prey (2006) port to Aurora OS, built on the idTech4A++ branch of idTech4.
 The game resources are not distributed with the package: point the launcher
 at a legally installed copy of the game.
 
@@ -83,18 +83,18 @@ rsync -avP include-config-release/SDL2/* include/SDL2/
 rsync -avP *.so* lib/
 popd
 
-# the engine: Quake 4 only, GLES3, with the port turned on
+# the engine: Prey only, GLES3, with the port turned on
 cmake \
     -G Ninja \
     -DCMAKE_MAKE_PROGRAM=/usr/bin/ninja \
-    -Bbuild/%{_arch}/quake4es \
+    -Bbuild/%{_arch}/prey \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_D3=OFF \
-    -DBUILD_PREY=OFF \
+    -DBUILD_PREY=ON \
     -DBUILD_ETQW=OFF \
     -DBUILD_D3_MOD=OFF \
     -DBUILD_Q4_MOD=OFF \
-    -DBUILD_Q4=ON \
+    -DBUILD_Q4=OFF \
     -DOPENGLES3=ON \
     -DAURORA=ON \
     -DAURORA_FBO=ON \
@@ -105,15 +105,15 @@ cmake \
     -DUSE_SYSTEM_CURL=ON \
     -DCURL_LIBRARY=%{_libdir}/libcurl.so \
     -DUSE_SYSTEM_FREETYPE=OFF \
-    -S quake4es \
-    -B build/%{_arch}/quake4es
+    -S prey \
+    -B build/%{_arch}/prey
 
-cmake --build build/%{_arch}/quake4es -j`nproc`
+cmake --build build/%{_arch}/prey -j`nproc`
 
 %install
 # the engine binary and the game library
-install -m 755 -D build/%{_arch}/quake4es/doom3/neo/Quake4 %{buildroot}%{_bindir}/%{name}
-install -m 755 -D build/%{_arch}/quake4es/doom3/neo/libq4game.so -t %{buildroot}%{_datadir}/%{name}/lib
+install -m 755 -D build/%{_arch}/prey/doom3/neo/Prey %{buildroot}%{_bindir}/%{name}
+install -m 755 -D build/%{_arch}/prey/doom3/neo/libpreygame.so -t %{buildroot}%{_datadir}/%{name}/lib
 
 # SDL2 from the fork travels inside the package and wins at runtime over the
 # system one, because the binary's rpath points here
