@@ -13,10 +13,9 @@ project by glKarin - an id Tech 4 fork with an OpenGL ES renderer and
 support for mobile platforms.
 
 ## Port author
-
-I (sashikknox) ported this and many other games to Aurora OS.
-I also write about new game ports for Aurora OS (in Russian) on my
-channel: https://t.me/auroraosgames Subscribe!
+The port was made by the developer [sashikknox](https://boosty.to/sashikknox).
+News about new game ports for Aurora OS (in Russian) is published
+in the Telegram channel: https://t.me/auroraosgames — subscribe!
 
 ## Disclaimer
 
