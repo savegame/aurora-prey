@@ -4,8 +4,8 @@
 
 Name:       %{_app_orgname}.%{_app_appname}
 Summary:    Prey for Aurora OS
-Release:    14
-Version:    1.0.0
+Release:    1
+Version:    1.6.0
 Group:      Amusements/Games
 License:    GPLv3
 Source0:    %{name}.tar.gz
