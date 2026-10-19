@@ -29,6 +29,11 @@ folder with your legally obtained game data (it must contain the
 `base` directory with pk4 files); the selected path is saved between
 launches.
 
+## Screenshots 
+|<img width="2400" height="1080" alt="Снимок_Экрана_20261020_012" src="https://github.com/user-attachments/assets/23f8fd94-1360-4c5c-a94f-402d17576899" />|<img width="2400" height="1080" alt="Снимок_Экрана_20261020_011" src="https://github.com/user-attachments/assets/206a796e-f145-4668-aae6-d9a28b88cfb5" />|
+|:-:|:-:|
+|<img width="2400" height="1080" alt="Снимок_Экрана_20261020_003" src="https://github.com/user-attachments/assets/ad2ef3b8-e2cb-49d7-b7fb-ac11dcef559b" />|<img width="2400" height="1080" alt="Снимок_Экрана_20261020_001" src="https://github.com/user-attachments/assets/77b806c4-88c9-45e0-940c-9668f5e8414b" />|
+
 ## Port features
 
 - OpenGL ES 2/3 renderer: the game runs on mobile GPUs without full
